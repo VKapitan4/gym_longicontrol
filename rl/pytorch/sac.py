@@ -344,7 +344,7 @@ class SAC:
                                                   value_target.detach())
 
         # Policy loss
-        policy_function_loss = (alpha * log_pi - q_pred_new_action).mean()
+        policy_function_loss = (alpha * log_pi - q_pred_new_action.detach()).mean()
 
         # Perhaps add regularization loss
         # mean_reg_loss = 0.001 * policy_mean.pow(2).mean()
