@@ -151,7 +151,7 @@ def create_power_estimator(car_id):
             data = pd.read_csv(fname, sep='\t', engine='python')
             print(fname)
             try:
-                df = df.append(data, ignore_index=True)
+                df = df._append(data, ignore_index=True)
             except NameError:
                 df = data
     dt = round(abs(df['Time[sec]'][0] - df['Time[sec]'][1]), 4)
@@ -207,4 +207,5 @@ def get_specs(car_id):
 if __name__ == '__main__':
     car_id = 'BMW_electric_i3_2014'
     model = get_power_estimator(car_id)
-    # create_power_estimator(car_id)
+elif __name__ == '__create_power_estimator__':
+    create_power_estimator(car_id)
