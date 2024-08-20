@@ -239,8 +239,8 @@ class SAC:
                       save_dname=None):
         random_state_np = self.env.np_random.get_state()
 
-        if record:
-            self.do_visualization(record, save_dname)
+        #if record:
+        #    self.do_visualization(record, save_dname)
 
         self.env.seed(2)
 
@@ -276,14 +276,17 @@ class SAC:
             import os
             save_dname = os.path.join(save_dname,
                                       'videos/' + str(time()) + '/')
-            env = wrappers.Monitor(self.env, save_dname)
+            video_path = os.path.join(save_dname, 'video.mp4')
+            env = wrappers.RecordVideo(self.env, video_path)
         else:
             env = self.env
         env.seed(2)
 
         state = numpy_to_torch(env.reset())
         episode_return = 0
+        i = 1
         while True:
+            print("circle: ", i)
             action = self.policy_function.get_action(state, deterministic=True)
             action = torch_to_numpy(action).reshape(env.action_space.shape)
             next_state, reward, done, info = env.step(action)
@@ -295,6 +298,60 @@ class SAC:
             if done:
                 state = numpy_to_torch(env.reset())
                 break
+            i+=1
+        env.close()
+
+    def do_visualization1(self, record=False, save_dname=None):
+        if record:
+            from gym import wrappers
+            import cv2
+            from time import time
+            import os
+
+            #save_dname = os.path.join(save_dname,
+            #                          'videos/' + str(time()) + '/')
+            env = wrappers.RecordVideo(self.env, save_dname, episode_trigger=lambda x: True)
+            env = self.env
+            video_path = os.path.join(save_dname, 'video.mp4')
+            # Postavke za video
+            #video_path = 'episode_video.avi'
+            #frame_width = 1000  # Širina okvira
+            #frame_height = 450  # Visina okvira
+            #fps = 30  # Frekvencija snimanja
+
+            # Kreirajte VideoWriter objekt
+            #fourcc = cv2.VideoWriter_fourcc(*'MJPG')
+            #video_writer = cv2.VideoWriter(video_path, fourcc, fps, (frame_width, frame_height))
+            
+        else:
+            env = self.env
+        env.seed(2)
+
+        state = numpy_to_torch(env.reset())
+        episode_return = 0
+        #video.init()
+        i = 1
+        while True:
+            print("action: ", i)
+            action = self.policy_function.get_action(state, deterministic=True)
+            action = torch_to_numpy(action).reshape(env.action_space.shape)
+            next_state, reward, done, info = env.step(action)
+            episode_return += reward
+
+            state = numpy_to_torch(next_state)
+            
+            # Pretvorite stanje u sliku (ovdje možete prilagoditi kako želite)
+            #frame = np.zeros((frame_height, frame_width, 3), dtype=np.uint8)  # Prazan okvir
+            # Ovdje dodajte logiku za prikaz stanja (npr. crtanje objekata na okviru)
+            
+            # Snimite trenutni okvir u video
+            #video_writer.write(frame)
+
+            if done:
+                state = numpy_to_torch(env.reset())
+                break
+            i+=1
+        video_writer.release()
         env.close()
 
     def init_replay_buffer(self, init_policy, fill_size):

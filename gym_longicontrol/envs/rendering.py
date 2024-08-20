@@ -15,8 +15,8 @@ class Viewer(pyglet.window.Window):
         super().__init__(vsync=True, *args, **kwargs)
 
         self.batch = pyglet.graphics.Batch()
-        self.background = pyglet.graphics.OrderedGroup(0)
-        self.foreground = pyglet.graphics.OrderedGroup(1)
+        self.background = pyglet.graphics.Group(0)
+        self.foreground = pyglet.graphics.Group(1)
 
         self.isopen = True
         self.pause = False
@@ -35,7 +35,7 @@ class Viewer(pyglet.window.Window):
         if return_rgb_array:
             buffer = pyglet.image.get_buffer_manager().get_color_buffer()
             image_data = buffer.get_image_data()
-            arr = np.frombuffer(image_data.data, dtype=np.uint8)
+            arr = np.frombuffer(image_data.get_data(), dtype=np.uint8)
             # In https://github.com/openai/gym-http-api/issues/2, we
             # discovered that someone using Xmonad on Arch was having
             # a window of size 598 x 398, though a 600 x 400 window
@@ -52,7 +52,7 @@ class Viewer(pyglet.window.Window):
         image_data = pyglet.image.get_buffer_manager().get_color_buffer(
         ).get_image_data()
         self.flip()
-        arr = np.fromstring(image_data.data, dtype=np.uint8, sep='')
+        arr = np.fromstring(image_data.get_data(), dtype=np.uint8, sep='')
         arr = arr.reshape(self.height, self.width, 4)
         return arr[::-1, :, 0:3]
 
@@ -115,7 +115,7 @@ def figure_to_image(mlp_fig, rel_anchor_x=0.5, rel_anchor_y=0.5):
     from matplotlib.backends.backend_agg import FigureCanvasAgg
     canvas = FigureCanvasAgg(mlp_fig)
     pic_data = io.BytesIO()
-    canvas.print_raw(pic_data, dpi=mlp_fig.dpi)
+    canvas.print_raw(pic_data)#, dpi=mlp_fig.dpi)
     width, height = mlp_fig.get_size_inches() * mlp_fig.dpi
     width = int(width)
     height = int(height)

@@ -147,6 +147,7 @@ else:
           file=open(os.path.join(save_dname, f'seed{args.seed}.out'), 'a'))
 
 for epoch in range(num_epochs):
+    print("epoch: ", epoch)
     t0 = time.time()
     agent.do_training(num_steps_per_epoch)
     t1 = time.time()

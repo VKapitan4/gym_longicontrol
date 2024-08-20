@@ -279,14 +279,14 @@ class DeterministicTrack(gym.Env):
                                     rel_anchor_y=0,
                                     batch=self.viewer.batch,
                                     group=self.viewer.background)
-            start.position = (zero_x, clearance_y)
+            start.position = (zero_x, clearance_y, 0)
             self.viewer.components['start'] = start
             finish = rendering.Image(fname,
                                      rel_anchor_y=0,
                                      batch=self.viewer.batch,
                                      group=self.viewer.background)
             finish.position = (zero_x + scale_x * self.track_length,
-                               clearance_y)
+                               clearance_y, 0)
             self.viewer.components['finish'] = finish
 
             self.viewer.components['signs'] = []
@@ -298,7 +298,7 @@ class DeterministicTrack(gym.Env):
                                           batch=self.viewer.batch,
                                           group=self.viewer.background)
             speedometer.position = (screen_width - 110 - clearance_x,
-                                    220 + clearance_y)
+                                    220 + clearance_y, 0)
             self.viewer.components['speedometer'] = speedometer
 
             fname = os.path.join(rel_dir, 'needle_6x60.png')
@@ -307,7 +307,7 @@ class DeterministicTrack(gym.Env):
                                      batch=self.viewer.batch,
                                      group=self.viewer.foreground)
             needle.position = (screen_width - 110 - clearance_x,
-                               308 + clearance_y)
+                               308 + clearance_y, 0)
             self.viewer.components['needle'] = needle
 
             fname = os.path.join(rel_dir, 'needle_6x30.png')
@@ -316,7 +316,7 @@ class DeterministicTrack(gym.Env):
                                         batch=self.viewer.batch,
                                         group=self.viewer.background)
             needle_sl.position = (screen_width - 110 - clearance_x,
-                                  308 + clearance_y)
+                                  308 + clearance_y, 0)
             self.viewer.components['needle_sl'] = needle_sl
 
             # info label
@@ -327,7 +327,7 @@ class DeterministicTrack(gym.Env):
                                               font_size=12,
                                               color=(255, 255, 255, 255))
             velocity0_label.position = (screen_width - 110 - clearance_x,
-                                        267 + clearance_y)
+                                        267 + clearance_y, 0)
             self.viewer.components['velocity0_label'] = velocity0_label
             energy0_label = rendering.Label(text='kWh',
                                             batch=self.viewer.batch,
@@ -336,7 +336,7 @@ class DeterministicTrack(gym.Env):
                                             font_size=12,
                                             color=(255, 255, 255, 255))
             energy0_label.position = (screen_width - 155 - clearance_x,
-                                      238 + clearance_y)
+                                      238 + clearance_y, 0)
             self.viewer.components['energy0_label'] = energy0_label
             time0_label = rendering.Label(text='min',
                                           batch=self.viewer.batch,
@@ -345,7 +345,7 @@ class DeterministicTrack(gym.Env):
                                           font_size=12,
                                           color=(255, 255, 255, 255))
             time0_label.position = (screen_width - 49 - clearance_x,
-                                    238 + clearance_y)
+                                    238 + clearance_y, 0)
             self.viewer.components['time0_label'] = time0_label
 
             velocity_label = rendering.Label(text=str(int(self.velocity *
@@ -356,7 +356,7 @@ class DeterministicTrack(gym.Env):
                                              font_size=12,
                                              color=(255, 255, 255, 255))
             velocity_label.position = (screen_width - 150 - clearance_x,
-                                       267 + clearance_y)
+                                       267 + clearance_y, 0)
             self.viewer.components['velocity_label'] = velocity_label
             energy_label = rendering.Label(text=str(
                 round(self.total_energy_kWh, 2)),
@@ -366,7 +366,7 @@ class DeterministicTrack(gym.Env):
                                            font_size=12,
                                            color=(255, 255, 255, 255))
             energy_label.position = (screen_width - 200 - clearance_x,
-                                     238 + clearance_y)
+                                     238 + clearance_y, 0)
             self.viewer.components['energy_label'] = energy_label
             m, s = divmod(self.time, 60)
             time_label = rendering.Label(text=f'{m:02.0f}:{s:02.0f}',
@@ -376,7 +376,7 @@ class DeterministicTrack(gym.Env):
                                          font_size=12,
                                          color=(255, 255, 255, 255))
             time_label.position = (screen_width - 99 - clearance_x,
-                                   238 + clearance_y)
+                                   238 + clearance_y, 0)
             self.viewer.components['time_label'] = time_label
 
             # info figures
@@ -391,7 +391,7 @@ class DeterministicTrack(gym.Env):
                                     rel_anchor_y=0,
                                     batch=self.viewer.batch,
                                     group=self.viewer.background)
-            info.position = (clearance_x - 40, 225 + clearance_y)
+            info.position = (clearance_x - 40, 225 + clearance_y, 0)
             self.viewer.components['info'] = info
 
             # car
@@ -400,7 +400,7 @@ class DeterministicTrack(gym.Env):
                                   rel_anchor_x=1,
                                   batch=self.viewer.batch,
                                   group=self.viewer.foreground)
-            car.position = (zero_x, 50 + clearance_y)
+            car.position = (zero_x, 50 + clearance_y, 0)
             self.viewer.components['car'] = car
 
         # speed limit signs
@@ -417,7 +417,7 @@ class DeterministicTrack(gym.Env):
                                        batch=self.viewer.batch,
                                        group=self.viewer.background)
                 sign.position = (zero_x + scale_x * (slp - self.position),
-                                 100 + clearance_y)
+                                 100 + clearance_y, 0)
                 self.viewer.components['signs'].append(sign)
 
         # updates
@@ -431,16 +431,16 @@ class DeterministicTrack(gym.Env):
                 sign.opacity = 255
             if -zero_x - 50 <= scale_x * distance <= screen_width - zero_x + 50:
                 sign.position = (zero_x + scale_x * distance,
-                                 100 + clearance_y)
+                                 100 + clearance_y, 0)
                 sign.visible = True
             else:
                 sign.visible = False
         self.viewer.components['start'].position = (zero_x + scale_x *
                                                     (0 - self.position),
-                                                    clearance_y)
+                                                    clearance_y, 0)
         self.viewer.components['finish'].position = (
             zero_x + scale_x * (self.track_length - self.position),
-            clearance_y)
+            clearance_y, 0)
 
         # car turns red if speed limit is exceeded
         if self.velocity > self.current_speed_limit:
