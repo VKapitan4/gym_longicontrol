@@ -207,5 +207,4 @@ def get_specs(car_id):
 if __name__ == '__main__':
     car_id = 'BMW_electric_i3_2014'
     model = get_power_estimator(car_id)
-elif __name__ == '__create_power_estimator__':
-    create_power_estimator(car_id)
+    #create_power_estimator(car_id)
